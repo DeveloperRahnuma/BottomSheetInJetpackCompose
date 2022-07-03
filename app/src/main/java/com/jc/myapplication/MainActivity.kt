@@ -32,11 +32,46 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                val windowInfo = rememberWindowInfo()
-                if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compect){
-                    potraitLayout()
-                }else{
-                    landscapeLayout()
+                val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+                val scaffoldState = rememberBottomSheetScaffoldState(
+                    bottomSheetState = sheetState
+                )
+                val scope = rememberCoroutineScope()
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    sheetContent = {
+                        Box(modifier = Modifier.fillMaxWidth()
+                            .height(300.dp)
+                            .background(Color.Blue),
+                            contentAlignment = Alignment.Center
+                        ){
+                            Text("Hi I am Rahnuma Sharib", style = TextStyle(
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            ))
+                        }
+                    }
+                ){
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    if(scaffoldState.bottomSheetState.isCollapsed){
+                                        scaffoldState.bottomSheetState.expand()
+                                    }else{
+                                        scaffoldState.bottomSheetState.collapse()
+                                    }
+                                }
+                            }
+                        ){
+                            Text("Click For Bottom Sheet")
+                        }
+                    }
                 }
                }
             }
